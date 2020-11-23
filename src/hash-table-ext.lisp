@@ -128,6 +128,7 @@
         ht-union))
 
 (defun ht-intersection (ht1 ht2 &optional (function #'left))
+  (check-type function (or symbol function))
   (let ((new (make-hash-table :test (hash-table-test ht1))))
     (doht ((k1 v1) ht1 new)
       (multiple-value-bind (v2 exists?)
