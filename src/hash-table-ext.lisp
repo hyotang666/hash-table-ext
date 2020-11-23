@@ -68,6 +68,18 @@
     (setf (gethash k hash-table) (funcall function k v))))
 
 ;;; PAIRLIS
+
+(declaim
+ (ftype (function (list list &optional hash-table)
+         (values hash-table &optional))
+        pairht))
+
+(defun pairht (keys values &optional (hash-table (make-hash-table)))
+  (loop :for k :in keys
+        :for v :in values
+        :do (setf (gethash k hash-table) v)
+        :finally (return hash-table)))
+
 ;;; ASSOC ASSOC-IF
 ;;; RASSOC RASSOC-IF
 ;;; INTERSECTION NINTERSECTION
