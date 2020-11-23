@@ -402,3 +402,38 @@
 
 ;;;; Exceptional-Situations:
 
+(requirements-about HT-UNION :doc-type function)
+
+;;;; Description:
+
+#+syntax (HT-UNION ht1 ht2 &optional (function #'left)) ; => result
+
+;;;; Arguments and Values:
+
+; ht1 := hash-table, otherwise signals implementation dependent condition.
+#?(HT-UNION "not hash-table" (MAKE-HASH-TABLE)) :signals CONDITION
+
+; ht2 := hash-table, otherwise signals implementation dependent condition.
+#?(HT-UNION (MAKE-HASH-TABLE) "not hash-table") :signals CONDITION
+
+; function := function, otherwise signals implementation dependent condition.
+#?(HT-UNION (MAKE-HASH-TABLE) (MAKE-HASH-TABLE) "not (or symbol function)") :signals CONDITION
+; The default is #'LEFT which keeps HT1 value.
+#?(HT-UNION (PAIRHT '(:A :B) '(1 2)) (PAIRHT '(:B :C) '(3 4)))
+:satisfies (lambda (result) (equalp result (pairht '(:a :b :c) '(1 2 4))))
+; The FUNCTION shoud be ftype as (function (t t)) which accepts v1 and v2.
+#?(HT-UNION (PAIRHT '(:A :B) '(1 2)) (PAIRHT '(:B :C) '(3 4)) #'+)
+:satisfies (lambda (result) (equalp result (pairht '(:a :b :c) '(1 5 4))))
+
+; result := hash-table
+
+;;;; Affected By:
+; none.
+
+;;;; Side-Effects:
+; none.
+
+;;;; Notes:
+
+;;;; Exceptional-Situations:
+
