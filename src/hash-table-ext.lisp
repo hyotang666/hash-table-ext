@@ -157,6 +157,19 @@
 
 ;;;; CL OBJECT ANALOGOUS
 ;;; WITH-SLOTS WITH-ACCESSORS
+
+(defmacro with-gethash ((&rest defs) hash-table-form &body body)
+  ;; Trivial syntax check.
+  (every (lambda (def) (check-type def (cons symbol (cons t null)))) defs)
+  (let ((hash-table (gensym "HASH-TABLE")))
+    ;; The body.
+    `(let ((,hash-table ,hash-table-form))
+       (symbol-macrolet (,(mapcar
+                            (lambda (def)
+                              `(,(car def) (gethash ,(cadr def) ,hash-table)))
+                            defs))
+         ,@body))))
+
 ;;;; CL SEQUENCE ANALOGOUS
 ;;; SUBSEQ
 
