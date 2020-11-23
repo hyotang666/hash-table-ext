@@ -95,7 +95,20 @@
 ;;; INTERSECTION NINTERSECTION
 ;;; SET-DIFFERENCE NSET-DIFFERENCE
 ;;; SET-EXCLUSIVE-OR NSET-EXCLUSIVE-OR
-;;; UNION NUNION
+;;; UNION
+
+(declaim
+ (ftype (function (hash-table hash-table &optional boolean)
+         (values hash-table &optional))
+        ht-union))
+
+(defun ht-union (ht1 ht2 &optional (keep t))
+  (let ((new (copy-ht ht1)))
+    (if keep
+        (maphash (lambda (k v) (ht-adjoin k v new)) ht2)
+        (maphash (lambda (k v) (setf (gethash k new) v)) ht2))
+    new))
+
 ;;; SUBSETP
 ;;;; CL OBJECT ANALOGOUS
 ;;; WITH-SLOTS WITH-ACCESSORS
