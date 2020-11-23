@@ -146,6 +146,15 @@
           (setf (gethash k2 new) v2)))))
 
 ;;; SUBSETP
+
+(declaim
+ (ftype (function (hash-table hash-table) (values boolean &optional)) subhtp))
+
+(defun subhtp (ht1 ht2)
+  (doht ((k1) ht1 t)
+    (unless (nth-value 1 (gethash k1 ht2))
+      (return nil))))
+
 ;;;; CL OBJECT ANALOGOUS
 ;;; WITH-SLOTS WITH-ACCESSORS
 ;;;; CL SEQUENCE ANALOGOUS
