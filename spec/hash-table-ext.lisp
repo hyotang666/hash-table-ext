@@ -81,3 +81,29 @@
 
 ;;;; Exceptional-Situations:
 
+(requirements-about HT-NULL :doc-type function)
+
+;;;; Description:
+
+#+syntax (HT-NULL hash-table) ; => result
+
+#?(HT-NULL (MAKE-HASH-TABLE)) => T
+#?(HT-NULL (PAIRHT '(:A) '(1))) => NIL
+
+;;;; Arguments and Values:
+
+; hash-table := hash-table, otherwise signals implementation dependent condition.
+#?(HT-NULL "not hash-table") :signals CONDITION
+
+; result := boolean
+
+;;;; Affected By:
+; none.
+
+;;;; Side-Effects:
+; none.
+
+;;;; Notes:
+
+;;;; Exceptional-Situations:
+
