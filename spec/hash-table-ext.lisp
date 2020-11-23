@@ -525,3 +525,33 @@
 
 ;;;; Exceptional-Situations:
 
+(requirements-about SUBHT :doc-type function)
+
+;;;; Description:
+
+#+syntax (SUBHT hash-table &rest keys) ; => result
+
+;;;; Arguments and Values:
+
+; hash-table := hash-table, otherwise signals implementation dependent condition.
+#?(SUBHT "not hash-table") :signals CONDITION
+
+; keys := t
+
+; result := hash-table
+#?(SUBHT (PAIRHT '(:A :B) '(1 2)) :A)
+:satisfies (lambda (result) (equalp result (pairht '(:a) '(1))))
+#?(SUBHT (PAIRHT '(:A :B :C) '(1 2 3)) :A :C)
+:satisfies (lambda (result) (equalp result (pairht '(:a :c) '(1 3))))
+
+;;;; Affected By:
+; none.
+
+;;;; Side-Effects:
+; none.
+
+;;;; Notes:
+
+;;;; Exceptional-Situations:
+; When specified key is missing, an error is signaled.
+#?(SUBHT (PAIRHT '(:A :B :C) '(1 2 3)) :A :NO-SUCH-KEY) :signals SIMPLE-ERROR
