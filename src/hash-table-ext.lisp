@@ -2,7 +2,30 @@
 
 (defpackage :hash-table-ext
   (:use :cl)
-  (:export))
+  (:nicknames "HT")
+  (:export ;; Iteration
+           #:doht
+           #:mapht
+           #:map-hash-table
+           #:nmapht
+           ;; Bind
+           #:with-gethash
+           ;; Construct
+           #:pairht
+           #:ht-adjoin
+           ;; Trivial helpers
+           #:ht-null
+           #:copy-ht
+           ;; As set.
+           #:ht-intersection
+           #:ht-union
+           #:ht-set-difference
+           #:ht-set-exclusive-or
+           #:subhtp
+           #:subht)
+  (:export ;; Miscellaneous
+           #:left
+           #:right))
 
 (in-package :hash-table-ext)
 
