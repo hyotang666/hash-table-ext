@@ -80,6 +80,16 @@
         :do (setf (gethash k hash-table) v)
         :finally (return hash-table)))
 
+;;; ADJOIN
+
+(declaim
+ (ftype (function (t t hash-table) (values hash-table &optional)) ht-adjoin))
+
+(defun ht-adjoin (key value hash-table)
+  (unless (nth-value 1 (gethash key hash-table))
+    (setf (gethash key hash-table) value))
+  hash-table)
+
 ;;; ASSOC ASSOC-IF
 ;;; RASSOC RASSOC-IF
 ;;; INTERSECTION NINTERSECTION
@@ -87,7 +97,6 @@
 ;;; SET-EXCLUSIVE-OR NSET-EXCLUSIVE-OR
 ;;; UNION NUNION
 ;;; SUBSETP
-;;; ADJOIN
 ;;;; CL OBJECT ANALOGOUS
 ;;; WITH-SLOTS WITH-ACCESSORS
 ;;;; CL SEQUENCE ANALOGOUS
