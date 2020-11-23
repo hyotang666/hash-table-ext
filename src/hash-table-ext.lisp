@@ -132,7 +132,19 @@
       (unless (nth-value 1 (gethash k1 ht2))
         (setf (gethash k1 new) v1)))))
 
-;;; SET-EXCLUSIVE-OR NSET-EXCLUSIVE-OR
+;;; SET-EXCLUSIVE-OR
+
+(declaim
+ (ftype (function (hash-table hash-table) (values hash-table &optional))
+        ht-set-exclusive-or))
+
+(defun ht-set-exclusive-or (ht1 ht2)
+  (let ((new (copy-ht ht1)))
+    (doht ((k2 v2) ht2 new)
+      (if (nth-value 1 (gethash k2 new))
+          (remhash k2 new)
+          (setf (gethash k2 new) v2)))))
+
 ;;; SUBSETP
 ;;;; CL OBJECT ANALOGOUS
 ;;; WITH-SLOTS WITH-ACCESSORS
