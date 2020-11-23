@@ -78,14 +78,19 @@
         map-hash-table
         nmapht))
 
-(defun mapht (function hash-table) (maphash function hash-table) hash-table)
+(defun mapht (function hash-table)
+  (assert (typep function '(or symbol function))) ; CLISP needs.
+  (maphash function hash-table)
+  hash-table)
 
 (defun map-hash-table (function hash-table)
+  (assert (typep function '(or symbol function))) ; CLISP needs.
   (let ((new (copy-ht hash-table)))
     (doht ((k v) hash-table new)
       (setf (gethash k new) (funcall function k v)))))
 
 (defun nmapht (function hash-table)
+  (assert (typep function '(or symbol function))) ; CLISP needs.
   (doht ((k v) hash-table hash-table)
     (setf (gethash k hash-table) (funcall function k v))))
 
@@ -97,6 +102,9 @@
         pairht))
 
 (defun pairht (keys values &optional (hash-table (make-hash-table)))
+  (assert (typep keys 'list)) ; CLISP needs.
+  (assert (typep values 'list)) ; CLISP needs.
+  (assert (typep hash-table 'hash-table)) ; CLISP needs.
   (loop :for (k . k-rest) :on keys
         :for (v . r-rest) :on values
         :if (or (and k-rest (not r-rest)) (and r-rest (not k-rest)))
@@ -129,6 +137,7 @@
 
 (defun ht-intersection (ht1 ht2 &optional (function #'left))
   (check-type function (or symbol function))
+  (assert (typep ht2 'hash-table)) ; CLISP needs.
   (let ((new (make-hash-table :test (hash-table-test ht1))))
     (doht ((k1 v1) ht1 new)
       (multiple-value-bind (v2 exists?)
@@ -154,6 +163,7 @@
         ht-set-difference))
 
 (defun ht-set-difference (ht1 ht2)
+  (assert (typep ht2 'hash-table)) ; CLISP needs.
   (let ((new (make-hash-table :test (hash-table-test ht1))))
     (doht ((k1 v1) ht1 new)
       (unless (nth-value 1 (gethash k1 ht2))
@@ -178,6 +188,7 @@
  (ftype (function (hash-table hash-table) (values boolean &optional)) subhtp))
 
 (defun subhtp (ht1 ht2)
+  (assert (typep ht2 'hash-table)) ; CLISP needs.
   (doht ((k1) ht1 t)
     (unless (nth-value 1 (gethash k1 ht2))
       (return nil))))
