@@ -123,30 +123,38 @@
 ; Not evaluated.
 #?(doht ((intern "NOT EVALUATED")) (make-hash-table)) :signals condition
 ; Bound by each keys of hash-table.
-#?(doht ((k) (pairht '(:a :b) '(1 2)))
-    (princ k))
-:outputs "AB"
+#?(let ((result))
+    (doht ((k) (pairht '(:a :b) '(1 2)))
+      (push k result))
+    result)
+:satisfies (lambda (result) (null (set-exclusive-or result '(:a :b))))
 ; You can use `NIL` for k when what you interests is only value.
-#?(doht ((nil v) (pairht '(:a :b) '(1 2)))
-    (princ v))
-:outputs "12"
+#?(let (result)
+    (doht ((nil v) (pairht '(:a :b) '(1 2)))
+      (push v result))
+    result)
+:satisfies (lambda (result) (null (set-exclusive-or result '(1 2))))
 
 ; v-value := symbol, otherwise signals implementation dependent condition.
 #?(DOHT ((KEY "not symbol") (MAKE-HASH-TABLE))) :signals CONDITION
 ; Not evaluated
 #?(doht ((key (intern "NOT EVALUATED")) (make-hash-table))) :signals condition
 ; Bound by each value of hash-table.
-#?(doht ((k v) (pairht '(:a :b) '(1 2)))
-    (format t "~A~A" k v))
-:outputs "A1B2"
+#?(let (result)
+    (doht ((k v) (pairht '(:a :b) '(1 2)))
+      (push (cons k v) result))
+    result)
+:satisfies (lambda (result) (null (set-exclusive-or result '((:a . 1) (:b . 2)) :test #'equal)))
 
 ; hash-form := The form which generates hash-table, otherwise signals implementation dependent condition.
 #?(DOHT ((KEY) "not hash-table")) :signals CONDITION
 
 ; return := NIL, if specified this form is evaluated at last and return its values.
-#?(doht ((k) (pairht '(:a :b) '(1 2)) (princ :last))
-    (princ k))
-:outputs "ABLAST"
+#?(let (result)
+    (doht ((k) (pairht '(:a :b) '(1 2)) (push :last result))
+      (push k result))
+    result)
+:satisfies (lambda (result) (null (set-exclusive-or result '(:a :b :last))))
 ; In the RETURN form, variable v-key and v-value is visible but NIL.
 #?(doht((k v) (pairht '(:a) '(1)) (list k v))
     (princ (list k v)))
@@ -163,16 +171,17 @@
 ; Returnable.
 #?(doht ((nil v) (pairht '(:a :b :c) '(1 2 3)))
     (if (evenp v)
-      (return nil)
-      (princ v)))
-:outputs "1"
+      (return v)))
+=> 2
 ; GOable.
-#?(doht ((nil v) (pairht '(:a :b :c) '(1 2 3)))
-    (when (evenp v)
-      (go :end))
-    (princ v)
-    :end)
-:outputs "13"
+#?(let (result)
+    (doht ((nil v) (pairht '(:a :b :c) '(1 2 3)))
+      (when (evenp v)
+        (go :end))
+      (push v result)
+      :end)
+    result)
+:satisfies (lambda (result) (null (set-exclusive-or result '(1 3))))
 
 ; result := NIL as default.
 #?(doht ((k) (make-hash-table))
@@ -199,10 +208,10 @@
 
 #+syntax (MAPHT function hash-table) ; => result
 
-#?(MAPHT (LAMBDA (&REST ARGS) (PRINT ARGS)) (PAIRHT '(:A :B) '(1 2)))
-:outputs "
-(:A 1) 
-(:B 2) "
+#?(let (result)
+    (MAPHT (LAMBDA (&REST ARGS) (push ARGS result)) (PAIRHT '(:A :B) '(1 2)))
+    result)
+:satisfies (lambda (result) (null (set-exclusive-or result '((:a 1) (:b 2)) :test #'equal)))
 
 ;;;; Arguments and Values:
 
