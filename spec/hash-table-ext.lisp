@@ -437,3 +437,31 @@
 
 ;;;; Exceptional-Situations:
 
+(requirements-about HT-SET-DIFFERENCE :doc-type function)
+
+;;;; Description:
+
+#+syntax (HT-SET-DIFFERENCE ht1 ht2) ; => result
+
+;;;; Arguments and Values:
+
+; ht1 := hash-table, otherwise signals implementation dependent condition.
+#?(HT-SET-DIFFERENCE "not hash-table" (MAKE-HASH-TABLE)) :signals CONDITION
+
+; ht2 := hash-table, otherwise signals implementation dependent condition.
+#?(HT-SET-DIFFERENCE (MAKE-HASH-TABLE) "not hash-table") :signals CONDITION
+
+; result := hash-table
+#?(HT-SET-DIFFERENCE (PAIRHT '(:A :B) '(1 2)) (PAIRHT '(:B :C) '(3 4)))
+:satisfies (lambda (result) (equalp result (pairht '(:a) '(1))))
+
+;;;; Affected By:
+; none.
+
+;;;; Side-Effects:
+; none.
+
+;;;; Notes:
+
+;;;; Exceptional-Situations:
+
