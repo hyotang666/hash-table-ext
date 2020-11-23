@@ -465,3 +465,31 @@
 
 ;;;; Exceptional-Situations:
 
+(requirements-about HT-SET-EXCLUSIVE-OR :doc-type function)
+
+;;;; Description:
+
+#+syntax (HT-SET-EXCLUSIVE-OR ht1 ht2) ; => result
+
+;;;; Arguments and Values:
+
+; ht1 := hash-table, otherwise signals implementation dependent condition.
+#?(HT-SET-EXCLUSIVE-OR "not hash-table" (MAKE-HASH-TABLE)) :signals CONDITION
+
+; ht2 := hash-table, otherwise signals implementation dependent condition.
+#?(HT-SET-EXCLUSIVE-OR (MAKE-HASH-TABLE) "not hash-table") :signals CONDITION
+
+; result := hash-table
+#?(HT-SET-EXCLUSIVE-OR (PAIRHT '(:A :B) '(1 2)) (PAIRHT '(:B :C) '(3 4)))
+:satisfies (lambda (result) (equalp result (pairht '(:a :c) '(1 4))))
+
+;;;; Affected By:
+; none.
+
+;;;; Side-Effects:
+; none.
+
+;;;; Notes:
+
+;;;; Exceptional-Situations:
+
