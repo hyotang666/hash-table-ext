@@ -8,6 +8,11 @@
 
 ;;;; CL CONSES ANALOGOUS
 ;;; NULL
+
+(declaim (ftype (function (hash-table) (values boolean &optional)) ht-null))
+
+(defun ht-null (hash-table) (zerop (hash-table-count hash-table)))
+
 ;;; COPY-ALIST
 ;;; MEMBER MEMBER-IF
 ;;; MAPC MAPCAR MAPCAN
