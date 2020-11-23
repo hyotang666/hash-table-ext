@@ -160,3 +160,18 @@
 ;;;; CL SEQUENCE ANALOGOUS
 ;;; SUBSEQ
 
+(declaim
+ (ftype (function (hash-table &rest t) (values hash-table &optional)) subht))
+
+(defun subht (hash-table &rest keys)
+  (let ((new
+         (make-hash-table :test (hash-table-test hash-table)
+                          :rehash-size (hash-table-rehash-size hash-table)
+                          :rehash-threshold (hash-table-rehash-threshold
+                                              hash-table))))
+    (dolist (key keys new)
+      (multiple-value-bind (v exists?)
+          (gethash key hash-table)
+        (if exists?
+            (setf (gethash key new) v)
+            (error "Missing hash-key: ~S" key))))))
