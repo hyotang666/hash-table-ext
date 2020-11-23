@@ -47,7 +47,6 @@
 
 (setf (fdefinition 'copy-ht) #'alexandria:copy-hash-table)
 
-;;; MEMBER MEMBER-IF
 ;;; MAPC MAPCAR MAPCAN
 
 (declaim
@@ -90,8 +89,6 @@
     (setf (gethash key hash-table) value))
   hash-table)
 
-;;; ASSOC ASSOC-IF
-;;; RASSOC RASSOC-IF
 ;;; INTERSECTION UNION
 
 (defun left (a b) (declare (ignore b)) a)
