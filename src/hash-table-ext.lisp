@@ -137,12 +137,15 @@
           (setf (gethash k1 new) (funcall function v1 v2)))))))
 
 (defun ht-union (ht1 ht2 &optional (function #'left))
+  (check-type function (or symbol function))
   (let ((new (copy-ht ht1)))
     (doht ((k2 v2) ht2 new)
       (multiple-value-bind (v1 exists?)
           (gethash k2 new)
-        (when exists?
-          (setf (gethash k2 new) (funcall function v1 v2)))))))
+        (setf (gethash k2 new)
+                (if exists?
+                    (funcall function v1 v2)
+                    v2))))))
 
 ;;; SET-DIFFERENCE
 
