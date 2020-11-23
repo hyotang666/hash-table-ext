@@ -363,3 +363,42 @@
 ;;;; Notes:
 
 ;;;; Exceptional-Situations:
+
+(requirements-about HT-INTERSECTION :doc-type function)
+
+;;;; Description:
+
+#+syntax (HT-INTERSECTION ht1 ht2 &optional (function #'left)) ; => result
+
+;;;; Arguments and Values:
+
+; ht1 := hash-table, otherwise signals implementation dependent condition.
+#?(HT-INTERSECTION "not hash-table" (MAKE-HASH-TABLE)) :signals CONDITION
+
+; ht2 := hash-table, otherwise signals implementation dependent condition.
+#?(HT-INTERSECTION (MAKE-HASH-TABLE) "not hash-table") :signals CONDITION
+
+; function := function, otherwise signals implementation dependent condition.
+#?(HT-INTERSECTION (MAKE-HASH-TABLE) (MAKE-HASH-TABLE)
+                   "not (or symbol function)") :signals CONDITION
+; The default is #'LEFT which keeps ht1 value.
+#?(HT-INTERSECTION (PAIRHT '(:A :B) '(1 2)) (PAIRHT '(:B :C) '(3 4)))
+:satisfies (lambda (result) (equalp result (pairht '(:b) '(2))))
+; The FUNCTION shoud be ftype as (function (t t)) which accepts v1 and v2.
+#?(HT-INTERSECTION (PAIRHT '(:A :B) '(1 2)) (PAIRHT '(:B :C) '(3 4)) #'+)
+:satisfies (lambda (result) (equalp result (pairht '(:b) '(5))))
+
+; result := hash-table
+#?(HT-INTERSECTION (MAKE-HASH-TABLE) (MAKE-HASH-TABLE))
+:satisfies (lambda (result) (equalp result (make-hash-table)))
+
+;;;; Affected By:
+; none.
+
+;;;; Side-Effects:
+; none.
+
+;;;; Notes:
+
+;;;; Exceptional-Situations:
+
