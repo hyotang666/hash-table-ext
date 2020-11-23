@@ -49,6 +49,24 @@
 
 ;;; MEMBER MEMBER-IF
 ;;; MAPC MAPCAR MAPCAN
+
+(declaim
+ (ftype (function (function hash-table) (values hash-table &optional))
+        mapht
+        map-hash-table
+        nmapht))
+
+(defun mapht (function hash-table) (maphash function hash-table) hash-table)
+
+(defun map-hash-table (function hash-table)
+  (let ((new (copy-ht hash-table)))
+    (doht ((k v) hash-table new)
+      (setf (gethash k new) (funcall function k v)))))
+
+(defun nmapht (function hash-table)
+  (doht ((k v) hash-table hash-table)
+    (setf (gethash k hash-table) (funcall function k v))))
+
 ;;; PAIRLIS
 ;;; ASSOC ASSOC-IF
 ;;; RASSOC RASSOC-IF
