@@ -92,23 +92,36 @@
 
 ;;; ASSOC ASSOC-IF
 ;;; RASSOC RASSOC-IF
-;;; INTERSECTION NINTERSECTION
-;;; SET-DIFFERENCE NSET-DIFFERENCE
-;;; SET-EXCLUSIVE-OR NSET-EXCLUSIVE-OR
-;;; UNION
+;;; INTERSECTION UNION
+
+(defun left (a b) (declare (ignore b)) a)
+
+(defun right (a b) (declare (ignore a)) b)
 
 (declaim
- (ftype (function (hash-table hash-table &optional boolean)
+ (ftype (function (hash-table hash-table &optional function)
          (values hash-table &optional))
+        ht-intersection
         ht-union))
 
-(defun ht-union (ht1 ht2 &optional (keep t))
-  (let ((new (copy-ht ht1)))
-    (if keep
-        (maphash (lambda (k v) (ht-adjoin k v new)) ht2)
-        (maphash (lambda (k v) (setf (gethash k new) v)) ht2))
-    new))
+(defun ht-intersection (ht1 ht2 &optional (function #'left))
+  (let ((new (make-hash-table :test (hash-table-test ht1))))
+    (doht ((k1 v1) ht1 new)
+      (multiple-value-bind (v2 exists?)
+          (gethash k1 ht2)
+        (when exists?
+          (setf (gethash k1 new) (funcall function v1 v2)))))))
 
+(defun ht-union (ht1 ht2 &optional (function #'left))
+  (let ((new (copy-ht ht1)))
+    (doht ((k2 v2) ht2 new)
+      (multiple-value-bind (v1 exists?)
+          (gethash k2 new)
+        (when exists?
+          (setf (gethash k2 new) (funcall function v1 v2)))))))
+
+;;; SET-DIFFERENCE NSET-DIFFERENCE
+;;; SET-EXCLUSIVE-OR NSET-EXCLUSIVE-OR
 ;;; SUBSETP
 ;;;; CL OBJECT ANALOGOUS
 ;;; WITH-SLOTS WITH-ACCESSORS
