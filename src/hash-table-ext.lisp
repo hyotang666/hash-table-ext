@@ -35,6 +35,18 @@
 (defun ht-null (hash-table) (zerop (hash-table-count hash-table)))
 
 ;;; COPY-ALIST
+
+(declaim
+ (ftype (function
+         (hash-table &key (:key (or symbol function))
+          (:test (or symbol function)) (:size (integer 0 *))
+          (:rehash-size (or (integer 1 *) (float 1.0 *)))
+          (:rehash-threshold (real 0 1)))
+         (values hash-table &optional))
+        copy-ht))
+
+(setf (fdefinition 'copy-ht) #'alexandria:copy-hash-table)
+
 ;;; MEMBER MEMBER-IF
 ;;; MAPC MAPCAR MAPCAN
 ;;; PAIRLIS
