@@ -269,3 +269,41 @@
 
 ;;;; Exceptional-Situations:
 
+(requirements-about NMAPHT :doc-type function)
+
+;;;; Description:
+
+#+syntax (NMAPHT function hash-table) ; => result
+
+;;;; Arguments and Values:
+
+; function := function, otherwise signals implementation dependent condition.
+#?(NMAPHT "not function" (MAKE-HASH-TABLE)) :signals CONDITION
+; FUNCTION should be the ftype as (function (t t)).
+; Return values are discarded.
+
+; hash-table := hash-table, otherwise signals implementation dependent condition.
+#?(NMAPHT #'LIST "not hash-table") :signals CONDITION
+
+; result := hash-table
+#?(LET ((HT (PAIRHT '(:A :B) '(1 2))))
+    (NMAPHT (LAMBDA (K V) (DECLARE (IGNORE K)) (1+ V)) HT))
+:satisfies (lambda (result)
+             (equalp result (pairht '(:a :b) '(2 3))))
+
+;;;; Affected By:
+; none
+
+;;;; Side-Effects:
+; Destructively modify second argument.
+#?(LET ((HT (PAIRHT '(:A :B) '(1 2))))
+    (NMAPHT (LAMBDA (K V) (DECLARE (IGNORE K)) (1+ V)) HT)
+    HT)
+:satisfies (lambda (result)
+             (equalp result (pairht '(:a :b) '(2 3))))
+
+;;;; Notes:
+; See [Traversal rules and side effect.](http://clhs.lisp.se/Body/03_f.htm)
+
+;;;; Exceptional-Situations:
+
