@@ -51,3 +51,33 @@
 ; When keys and values are different length, an error is signaled.
 #?(PAIRHT '(:A :B) '(1 2 3)) :signals SIMPLE-ERROR
 
+(requirements-about HT-ADJOIN :doc-type function)
+
+;;;; Description:
+
+#+syntax (HT-ADJOIN key value hash-table) ; => result
+
+;;;; Arguments and Values:
+
+; key := t
+
+; value := t
+
+; hash-table := hash-table, otherwise signals implementation dependent condition.
+#?(HT-ADJOIN T T "not hash-table") :signals CONDITION
+
+; result := hash-table
+
+;;;; Affected By:
+
+;;;; Side-Effects:
+; Third argument `HASH-TABLE` may modified.
+#?(HT-ADJOIN :A 1 (MAKE-HASH-TABLE))
+:satisfies (lambda (result) (equalp result (pairht '(:a) '(1))))
+#?(HT-ADJOIN :A 1 (PAIRHT '(:A) '(2)))
+:satisfies (lambda (result) (equalp result (pairht '(:a) '(2))))
+
+;;;; Notes:
+
+;;;; Exceptional-Situations:
+
