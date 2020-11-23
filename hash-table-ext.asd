@@ -2,9 +2,11 @@
 (in-package :asdf)
 (defsystem "hash-table-ext"
   :version
-  "0.1.0"
+  "0.2.0"
   :depends-on
-  nil
+  (
+   "alexandria" ; Public domain utilities.
+   )
   :pathname
   "src/"
   :components
