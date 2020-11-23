@@ -10,7 +10,10 @@
   :pathname
   "src/"
   :components
-  ((:file "hash-table-ext")))
+  ((:file "hash-table-ext"))
+  :author "SATO Shinichi"
+  :license "MIT"
+  :description "Tiny extensions for common lisp hash-tables.")
 
 ;;; These forms below are added by JINGOH.GENERATOR.
 ;; Ensure in ASDF for pretty printings.
