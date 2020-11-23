@@ -187,10 +187,10 @@
   (let ((hash-table (gensym "HASH-TABLE")))
     ;; The body.
     `(let ((,hash-table ,hash-table-form))
-       (symbol-macrolet (,(mapcar
-                            (lambda (def)
-                              `(,(car def) (gethash ,(cadr def) ,hash-table)))
-                            defs))
+       (symbol-macrolet ,(mapcar
+                           (lambda (def)
+                             `(,(car def) (gethash ,(cadr def) ,hash-table)))
+                           defs)
          ,@body))))
 
 ;;;; CL SEQUENCE ANALOGOUS

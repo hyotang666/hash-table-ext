@@ -2,7 +2,7 @@
 (in-package :asdf)
 (defsystem "hash-table-ext"
   :version
-  "1.0.0"
+  "1.0.1"
   :depends-on
   (
    "alexandria" ; Public domain utilities.
