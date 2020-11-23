@@ -120,7 +120,18 @@
         (when exists?
           (setf (gethash k2 new) (funcall function v1 v2)))))))
 
-;;; SET-DIFFERENCE NSET-DIFFERENCE
+;;; SET-DIFFERENCE
+
+(declaim
+ (ftype (function (hash-table hash-table) (values hash-table &optional))
+        ht-set-difference))
+
+(defun ht-set-difference (ht1 ht2)
+  (let ((new (make-hash-table :test (hash-table-test ht1))))
+    (doht ((k1 v1) ht1 new)
+      (unless (nth-value 1 (gethash k1 ht2))
+        (setf (gethash k1 new) v1)))))
+
 ;;; SET-EXCLUSIVE-OR NSET-EXCLUSIVE-OR
 ;;; SUBSETP
 ;;;; CL OBJECT ANALOGOUS
