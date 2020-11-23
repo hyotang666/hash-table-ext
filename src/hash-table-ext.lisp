@@ -193,6 +193,7 @@
     ;; The body.
     `(let ((,hash-table ,hash-table-form)
            ,@(mapcar (lambda (def var) `(,var ,(second def))) defs vars))
+       (check-type ,hash-table hash-table) ; ECL needs.
        (symbol-macrolet ,(mapcar
                            (lambda (def var)
                              `(,(car def) (gethash ,var ,hash-table)))
