@@ -193,3 +193,38 @@
 ; See [Traversal rules and side effect.](http://clhs.lisp.se/Body/03_f.htm)
 
 ;;;; Exceptional-Situations:
+(requirements-about MAPHT :doc-type function)
+
+;;;; Description:
+
+#+syntax (MAPHT function hash-table) ; => result
+
+#?(MAPHT (LAMBDA (&REST ARGS) (PRINT ARGS)) (PAIRHT '(:A :B) '(1 2)))
+:outputs "
+(:A 1) 
+(:B 2) "
+
+;;;; Arguments and Values:
+
+; function := function, otherwise signals implementation dependent condition.
+#?(MAPHT "not function" (MAKE-HASH-TABLE)) :signals CONDITION
+; FUNCTION should be the ftype as (function (t t)).
+; Return values are discarded.
+
+; hash-table := hash-table, otherwise signals implementation dependent condition.
+#?(MAPHT (LAMBDA (&REST ARGS) (PRINT ARGS)) "not hash-table") :signals CONDITION
+
+; result := hash-table
+#?(MAPHT (LAMBDA (&REST ARGS) (PRINT ARGS)) (MAKE-HASH-TABLE))
+:be-the HASH-TABLE
+
+;;;; Affected By:
+; none.
+
+;;;; Side-Effects:
+; none.
+
+;;;; Notes:
+; See [Traversal rules and side effect.](http://clhs.lisp.se/Body/03_f.htm)
+
+;;;; Exceptional-Situations:
