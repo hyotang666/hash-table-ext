@@ -493,3 +493,35 @@
 
 ;;;; Exceptional-Situations:
 
+(requirements-about SUBHTP :doc-type function)
+
+;;;; Description:
+
+#+syntax (SUBHTP ht1 ht2) ; => result
+
+;;;; Arguments and Values:
+
+; ht1 := hash-table, otherwise signals implementation dependent condition.
+#?(SUBHTP "not hash-table" (MAKE-HASH-TABLE)) :signals CONDITION
+
+; ht2 := hash-table, otherwise signals implementation dependent condition.
+#?(SUBHTP (MAKE-HASH-TABLE) "not hash-table") :signals CONDITION
+
+; result := boolean
+#?(SUBHTP (MAKE-HASH-TABLE) (MAKE-HASH-TABLE)) => T
+#?(SUBHTP (PAIRHT '(:A :B) '(1 2)) (PAIRHT '(:A :B) '(3 4))) => T
+#?(SUBHTP (PAIRHT '(:A :B) '(1 2)) (PAIRHT '(:A :B :C) '(3 4 5))) => T
+#?(SUBHTP (PAIRHT '(:A :B) '(1 2)) (PAIRHT '(:C :D) '(3 4))) => NIL
+#?(SUBHTP (PAIRHT '(:A :B) '(1 2)) (PAIRHT '(:B :C) '(3 4))) => NIL
+#?(SUBHTP (PAIRHT '(:A :B) '(1 2)) (PAIRHT '(:B) '(3))) => NIL
+
+;;;; Affected By:
+; none.
+
+;;;; Side-Effects:
+; none.
+
+;;;; Notes:
+
+;;;; Exceptional-Situations:
+
