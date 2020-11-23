@@ -2,7 +2,7 @@
 (in-package :asdf)
 (defsystem "hash-table-ext"
   :version
-  "0.0.0"
+  "0.0.1"
   :depends-on
   nil
   :pathname
