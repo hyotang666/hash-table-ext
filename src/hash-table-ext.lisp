@@ -184,13 +184,15 @@
 (defmacro with-gethash ((&rest defs) hash-table-form &body body)
   ;; Trivial syntax check.
   (every (lambda (def) (check-type def (cons symbol (cons t null)))) defs)
-  (let ((hash-table (gensym "HASH-TABLE")))
+  (let ((hash-table (gensym "HASH-TABLE"))
+        (vars (alexandria:make-gensym-list (length defs))))
     ;; The body.
-    `(let ((,hash-table ,hash-table-form))
+    `(let ((,hash-table ,hash-table-form)
+           ,@(mapcar (lambda (def var) `(,var ,(second def))) defs vars))
        (symbol-macrolet ,(mapcar
-                           (lambda (def)
-                             `(,(car def) (gethash ,(cadr def) ,hash-table)))
-                           defs)
+                           (lambda (def var)
+                             `(,(car def) (gethash ,var ,hash-table)))
+                           defs vars)
          ,@body))))
 
 ;;;; CL SEQUENCE ANALOGOUS
