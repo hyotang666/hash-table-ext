@@ -307,3 +307,59 @@
 
 ;;;; Exceptional-Situations:
 
+(requirements-about WITH-GETHASH :doc-type function)
+
+;;;; Description:
+
+#+syntax (WITH-GETHASH (&rest defs) hash-table-form &body body) ; => result
+
+;;;; Arguments and Values:
+
+; def+ := (name keyform)
+
+; When malformed, signals implementation dependent condition.
+#?(WITH-GETHASH ("not def form")
+      (MAKE-HASH-TABLE)) :signals CONDITION
+#?(WITH-GETHASH ((LESS-ELEMENT))
+      (MAKE-HASH-TABLE)) :signals CONDITION
+#?(WITH-GETHASH ((TOO MUCH ELEMENTS))
+      (MAKE-HASH-TABLE)) :signals CONDITION
+
+; name := symbol, otherwise signals implementation dependent condition.
+#?(WITH-GETHASH (("not symbol" :DUMMY))
+      (MAKE-HASH-TABLE)) :signals CONDITION
+; Not evaluated.
+#?(WITH-GETHASH (((INTERN "Not evaluated") :KEY))
+      (MAKE-HASH-TABLE)) :signals CONDITION
+
+; keyworm := form which generates key for hash-table.
+#?(LET ((HT (MAKE-HASH-TABLE)))
+    (WITH-GETHASH ((NAME :KEY)) HT
+      (setf name :value)
+      ht))
+:satisfies (lambda (result)
+             (equalp result (pairht '(:key) '(:value))))
+; Evaluated only once.
+#?(LET ((HT (MAKE-HASH-TABLE)))
+    (WITH-GETHASH ((NAME (PRINC :KEY))) HT
+      (setf name :value)
+      name))
+:outputs "KEY"
+
+; hash-table-form := Form which generates hash-table, otherwise signals implementation dependent condition.
+#?(with-gethash ((name :key)) "not hash-table")
+:signals CONDITION
+
+; body := Implicit progn.
+
+; result := T
+
+;;;; Affected By:
+; none
+
+;;;; Side-Effects:
+; none
+
+;;;; Notes:
+
+;;;; Exceptional-Situations:
