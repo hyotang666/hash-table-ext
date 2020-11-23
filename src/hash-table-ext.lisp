@@ -74,9 +74,12 @@
         pairht))
 
 (defun pairht (keys values &optional (hash-table (make-hash-table)))
-  (loop :for k :in keys
-        :for v :in values
-        :do (setf (gethash k hash-table) v)
+  (loop :for (k . k-rest) :on keys
+        :for (v . r-rest) :on values
+        :if (or (and k-rest (not r-rest)) (and r-rest (not k-rest)))
+          :do (error "The lists of keys and values are of unequal length.")
+        :else
+          :do (setf (gethash k hash-table) v)
         :finally (return hash-table)))
 
 ;;; ADJOIN
