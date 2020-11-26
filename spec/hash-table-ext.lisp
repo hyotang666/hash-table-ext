@@ -202,6 +202,7 @@
 ; See [Traversal rules and side effect.](http://clhs.lisp.se/Body/03_f.htm)
 
 ;;;; Exceptional-Situations:
+
 (requirements-about MAPHT :doc-type function)
 
 ;;;; Description:
@@ -223,7 +224,7 @@
 ; hash-table := hash-table, otherwise signals implementation dependent condition.
 #?(MAPHT (LAMBDA (&REST ARGS) (PRINT ARGS)) "not hash-table") :signals CONDITION
 
-; result := hash-table
+; result := hash-table, the second argument.
 #?(MAPHT (LAMBDA (&REST ARGS) (PRINT ARGS)) (MAKE-HASH-TABLE))
 :be-the HASH-TABLE
 
@@ -235,6 +236,13 @@
 
 ;;;; Notes:
 ; See [Traversal rules and side effect.](http://clhs.lisp.se/Body/03_f.htm)
+#?(let ((ht (pairht '(:a) '(1))))
+    (mapht (lambda (k v)
+             (declare (ignore v))
+             (remhash k ht))
+           ht))
+:satisfies (lambda (result)
+             (equalp result (make-hash-table)))
 
 ;;;; Exceptional-Situations:
 
