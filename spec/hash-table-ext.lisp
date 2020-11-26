@@ -331,7 +331,18 @@
              (equalp result (pairht '(:a :b) '(2 3))))
 
 ;;;; Notes:
-; See [Traversal rules and side effect.](http://clhs.lisp.se/Body/03_f.htm)
+; NMAPHT destructively update the second argument HASH-TABLE with returned value of the
+; first argument FUNCTION.
+#?(let ((ht (pairht '(:a) '(1))))
+    (values (nmapht (lambda (k v)
+                      (declare (ignore v))
+                      (remhash k ht))
+                    ht)
+            ht))
+:multiple-value-satisfies
+(lambda (returned origin)
+  (& (eq returned origin)
+     (equalp returned (pairht '(:a) '(t)))))
 
 ;;;; Exceptional-Situations:
 

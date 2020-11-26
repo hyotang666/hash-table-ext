@@ -2,7 +2,7 @@
 (in-package :asdf)
 (defsystem "hash-table-ext.test"
   :version
-  "0.13.3"
+  "0.13.4"
   :depends-on
   (:jingoh "hash-table-ext")
   :components
