@@ -282,7 +282,18 @@
 ; none
 
 ;;;; Notes:
-; See [Traversal rules and side effect.](http://clhs.lisp.se/Body/03_f.htm)
+; MAP-HASH-TABLE returned new hash-table which has same keys with argument hash-table.
+; And each values are set by return value of first argument FUNCTION.
+#?(let ((ht (pairht '(:a) '(0))))
+    (values (map-hash-table (lambda (k v)
+                              (declare (ignore v))
+                              (remhash k ht))
+                            ht)
+            ht))
+:multiple-value-satisfies
+(lambda (returned origin)
+  (& (equalp returned (pairht '(:a) '(t)))
+     (equalp origin (make-hash-table))))
 
 ;;;; Exceptional-Situations:
 
