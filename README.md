@@ -4,47 +4,25 @@ Tiny extensions for common lisp hash-tables.
 
 ## Alternatives and differences.
 
-### [cl-ana.hash-table-utils](https://github.com/ghollisjr/cl-ana/tree/master/hash-table-utils)
-* One part of the huge data analysis library.
-* Having alist converting.
-* Having keys and values listuping.
-* Lacking functions as set operations.
+|     |[cl-ana.hash-table-utils]| [alexandria] | [cl-hash-table-destructuring] | [cl-hash-util] | [hash-set] | hash-table-ext |
+| ---               | ---   | ---     | ---    | ---     | ---    | ---    |
+| Scope             | wide  | wide    | narrow | narrow  | narrow | narrow |
+| Converting        | alist | a/plist |        | a/plist |        |        |
+| Listuping         | k/v   | k/v     |        | k       | k/v    |        |
+| Getter for nested |       |         |        | \*      |        |        |
+| Iteration         | \*    |         |        |         | \*     | \*     |
+| Binding           |       |         | \*     | \*      |        | \*     |
+| Set ops           |       |         |        |         | \*     | \*     |
+| As CLOS object    |       |         |        |         | \*     |        |
 
-### [alexandria](https://gitlab.common-lisp.net/alexandria/alexandria)
-* Having alist and plist converting.
-* Having key and values listuping.
-* Lacking iterations.
-* Lacking functions as set operations.
-
-### [cl-hash-table-destructuring](https://github.com/rplacaman/cl-hash-table-destructuring)
-* Having binds macros.
-* Lacking iterations.
-* Lacking functions as set operations.
-
-### [cl-hash-util](https://github.com/orthecreedence/cl-hash-util)
-* Designed especially for accessing nested hash-tables.
-* Having alist and plist converting.
-* Having keys listuping.
-* Lacking functions as set operations.
-
-### [hash-set](https://github.com/samebchase/hash-set/)
-* Designed especially for set operations.
-* Introducing `HASH-SET` CLOS object rather than `CL:HASH-TABLE`.
-
-### hash-table-ext
-#### Against cl-ana.
-I want a tiny specific one.
-#### Against alexandria.
-In fact, hash-table-ext depends on alexandria.
-So hash-table-ext and alexandria are complemented each other.
-#### Against cl-hash-table-destructuring.
-I need some set operations.
-#### Against cl-hash-util.
-I need some set operations.
-#### Against hash-set.
-I want to use `CL:HASH-TABLE` directly.
+[cl-ana.hash-table-utils]: https://github.com/ghollisjr/cl-ana/tree/master/hash-table-utils
+[alexandria]: https://gitlab.common-lisp.net/alexandria/alexandria
+[cl-hash-table-destructuring]: https://github.com/rplacaman/cl-hash-table-destructuring
+[cl-hash-util]: https://github.com/orthecreedence/cl-hash-util
+[hash-set]: https://github.com/samebchase/hash-set/
 
 ## Usage
+For detail, [see spec file.](spec/hash-table-ext.lisp)
 
 ## From developer
 
@@ -58,7 +36,7 @@ SBCL
 
 ### Tested with
 * CLISP/2.49
-* SBCL/2.0.10
+* SBCL/2.1.6
 * CCL/1.12
 * ECL/20.4.24
 
