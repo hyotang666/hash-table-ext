@@ -13,7 +13,9 @@
   ((:file "hash-table-ext"))
   :author "SATO Shinichi"
   :license "MIT"
-  :description "Tiny extensions for common lisp hash-tables.")
+  :description "Tiny extensions for common lisp hash-tables."
+  :source-control (:git "git@github.com:hyotang666/hash-table-ext")
+  :bug-tracker "https://github.com/hyotang666/hash-table-ext/issues")
 
 ;;; These forms below are added by JINGOH.GENERATOR.
 ;; Ensure in ASDF for pretty printings.
