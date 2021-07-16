@@ -29,6 +29,8 @@
 
 (in-package :hash-table-ext)
 
+(declaim (optimize speed))
+
 ;;;; CL ITERATION ANALOGOUS
 ;;; DOLIST
 
@@ -130,30 +132,29 @@
 (defun right (a b) (declare (ignore a)) b)
 
 (declaim
- (ftype (function (hash-table hash-table &optional function)
+ (ftype (function (hash-table hash-table &optional (or symbol function))
          (values hash-table &optional))
         ht-intersection
         ht-union))
 
 (defun ht-intersection (ht1 ht2 &optional (function #'left))
-  (check-type function (or symbol function))
   (assert (typep ht2 'hash-table)) ; CLISP needs.
   (let ((new (make-hash-table :test (hash-table-test ht1))))
     (doht ((k1 v1) ht1 new)
       (multiple-value-bind (v2 exists?)
           (gethash k1 ht2)
         (when exists?
-          (setf (gethash k1 new) (funcall function v1 v2)))))))
+          (setf (gethash k1 new)
+                  (funcall (coerce function 'function) v1 v2)))))))
 
 (defun ht-union (ht1 ht2 &optional (function #'left))
-  (check-type function (or symbol function))
   (let ((new (copy-ht ht1)))
     (doht ((k2 v2) ht2 new)
       (multiple-value-bind (v1 exists?)
           (gethash k2 new)
         (setf (gethash k2 new)
                 (if exists?
-                    (funcall function v1 v2)
+                    (funcall (coerce function 'function) v1 v2)
                     v2))))))
 
 ;;; SET-DIFFERENCE
@@ -200,7 +201,7 @@
   ;; Trivial syntax check.
   (every (lambda (def) (check-type def (cons symbol (cons t null)))) defs)
   (let ((hash-table (gensym "HASH-TABLE"))
-        (vars (alexandria:make-gensym-list (length defs))))
+        (vars (alexandria:make-gensym-list (list-length defs))))
     ;; The body.
     `(let ((,hash-table ,hash-table-form)
            ,@(mapcar (lambda (def var) `(,var ,(second def))) defs vars))
