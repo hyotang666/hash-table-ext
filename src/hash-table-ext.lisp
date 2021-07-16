@@ -138,7 +138,10 @@
         ht-union))
 
 (defun ht-intersection (ht1 ht2 &optional (function #'left))
-  (assert (typep ht2 'hash-table)) ; CLISP needs.
+  #+clisp
+  (progn
+   (assert (typep ht2 'hash-table))
+   (assert (typep function '(or symbol function))))
   (let ((new (make-hash-table :test (hash-table-test ht1))))
     (doht ((k1 v1) ht1 new)
       (multiple-value-bind (v2 exists?)
@@ -148,6 +151,8 @@
                   (funcall (coerce function 'function) v1 v2)))))))
 
 (defun ht-union (ht1 ht2 &optional (function #'left))
+  #+clisp
+  (check-type function (or symbol function))
   (let ((new (copy-ht ht1)))
     (doht ((k2 v2) ht2 new)
       (multiple-value-bind (v1 exists?)
