@@ -138,7 +138,7 @@
         ht-union))
 
 (defun ht-intersection (ht1 ht2 &optional (function #'left))
-  #+(or clisp allegro)
+  #+(or clisp allegro cmu)
   (progn
    (assert (typep ht2 'hash-table))
    (assert (typep function '(or symbol function))))
@@ -151,7 +151,7 @@
                   (funcall (coerce function 'function) v1 v2)))))))
 
 (defun ht-union (ht1 ht2 &optional (function #'left))
-  #+(or clisp allegro)
+  #+(or clisp allegro cmu)
   (check-type function (or symbol function))
   (let ((new (copy-ht ht1)))
     (doht ((k2 v2) ht2 new)
